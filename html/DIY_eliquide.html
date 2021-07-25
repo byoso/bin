@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 4 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+    
+    <title>DIY e-liquide</title>
+</head>
+<style>
+
+</style>
+
+<body class="container">
+<div id="app">
+    <h1 class="mt-5">Dilution pour e-liquide</h1>
+    <div class="card-deck">
+        <div class="card p-3 border-dark">
+            <h2 class="card-title">Arôme</h2>
+            volume d'arome en ml :
+            <input type="number" class="number_field" min="1" v-model="arome_vol" @change="changePara">
+            Dilution de l'arôme (en %) :
+            <input type="number" class="number_field" min="1" max="100" v-model="arome_dil" @change="changePara">
+        </div>
+    
+        <div class="card p-3 border-dark">
+            <h1 class="card-title">Nicotine</h1>
+            concentration du booster (en mg/ml):
+            <input type="number" class="number_field" step="0.25" min="0" max="24" v-model="nico_boost" @change="changePara">
+            Concentration voulue (en mg/ml):
+            <input type="number" class="number_field" step="0.25" min="0" max="20" v-model="nico_con" @change="changePara">
+    
+        </div>
+    
+        <div class="card p-3 border-dark">
+            <h1 class="card-title">Volume total souhaité </h1>
+            <p>(changera les volumes d'arôme et nicotine)</p>
+            <input type="number" min="0" step="10" v-model="volume_tot" @change="changeVol">
+    
+        </div>
+
+    </div>
+    <div class="card p-3 mt-5 border-dark">
+        <h1 class="card-title">Recette à appliquer</h1>
+        <p>Volume d'arome : [[ arome_vol ]] ml</p>
+        <p>Volume de booster nicotine : [[ nico_vol ]] ml</p>
+        <p>Volume de base necesaire : [[ base ]] ml</p>
+        <p class="font-weight-bold">Volume total obtenu : [[ volume_tot ]] ml</p>
+        <div class="alert alert-danger" v-if="alerte">
+            Parametres impossibles !! Concentration en nicotine trop élevée.
+        </div>
+    </div>
+
+
+
+</div>
+
+<script>
+var vm = Vue.createApp({
+        delimiters: ['[[', ']]'],
+        data() {
+            return {
+                arome_vol:30,
+                arome_dil:10,
+                nico_boost:20,
+                nico_con:3,
+                nico_vol:0,
+                base:0,
+                v_plus_arome:0,
+                volume_tot:0,
+                alerte: false,
+            }
+        },
+        methods: {
+            changePara() {
+                this.volume_tot = this.arome_vol*(100/this.arome_dil)
+                this.v_plus_arome = this.volume_tot-this.arome_vol
+                this.nico_vol = this.volume_tot*(this.nico_con/this.nico_boost)
+                this.base = this.v_plus_arome-this.nico_vol
+                if (Number(this.base) < 0){
+                    this.alerte = true;
+                }else {
+                    this.alerte = false;
+                }
+            },
+            changeVol() {
+                this.arome_vol = this.volume_tot*this.arome_dil/100
+                this.v_plus_arome = this.volume_tot-this.arome_vol
+                this.nico_vol = this.volume_tot*(this.nico_con/this.nico_boost)
+                this.base = this.v_plus_arome-this.nico_vol
+                
+            },
+        },
+        beforeMount() {
+            this.changePara()
+        },
+
+    }).mount('#app');
+
+
+
+</script>
+
+
+</body>
+</html>
+

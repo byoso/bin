@@ -1,0 +1,99 @@
+#! /usr/bin/env python3
+# -*- coding : utf-8 -*-
+
+import os
+import sys
+
+print("Version de python : ",sys.version_info[0], ".", sys.version_info[1], ".", sys.version_info[2])
+
+params = len(sys.argv)
+print(os.getcwd())
+
+# local_rep = os.path.expanduser("~/Bureau")
+local_rep = os.getcwd()
+# local_rep = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
+affichage = ""
+
+
+def afficher(truc, bloque=False):
+    global affichage
+    affichage = affichage + truc + "\n"
+    if bloque == False:
+        print(truc)
+
+
+def imprimer(mon_fichier=""):
+    with open(mon_fichier, "w") as fichier:
+        fichier.write(affichage)
+
+
+afficher("""
+===============================================================================
+=                              Calcul d'interets                              =
+===============================================================================""")
+
+if params >= 2:
+    mnt = float(sys.argv[1])
+else:
+    mnt = float(input("\nCapital de départ : "))
+cap = mnt
+
+if params >= 3:
+    its = float(sys.argv[2])
+else:
+    its = float(input("pourcentage des interêts par an : "))
+
+if params >= 4:
+    ann = int(sys.argv[3])
+else:
+    ann = int(input("nombre d'années : "))
+
+afficher("Capital de depart : " + str(mnt), True)
+afficher("Pourcentage annuel des interets : " + str(its), True)
+
+afficher("\nAnnée  | Capital            | Montant des interets annuels  | Moy. mensuelle  |")
+afficher("_______|____________________|_______________________________|_________________|")
+
+annee = 1
+for y in range(ann):
+    if annee < 10:
+        annee = "0" + str(annee)
+    interet = (mnt * its) / 100
+    int_mensuel = interet/12
+    mnt = str(round(mnt + interet, 2))
+    interet = str(round(interet, 2))
+    int_mensuel = str(round(int_mensuel, 2))
+
+    longueur_mnt = len(mnt)
+    mult1 = 18 - longueur_mnt
+
+    longueur_int = len(interet)
+    mult2 = 30 - longueur_int
+
+    longueur_int_men = len(int_mensuel)
+    mult3 = 15 - longueur_int_men
+
+    espace = " "
+    remplissage1 = espace * mult1
+    remplissage2 = espace * mult2
+    remplissage3 = espace * mult3
+    afficher("{0}     |  {1}{3}| {2}{4}|  {5}{6}|".format(
+        annee, mnt, interet, remplissage1, remplissage2, int_mensuel, remplissage3))
+    annee = int(annee)
+    mnt = float(mnt)
+    if annee % 10 == 0:
+        afficher("_______|____________________|_______________________________|_________________|")
+
+    annee += 1
+
+
+print("\nInterets à {}% par an sur {} ans, à partir d'un capital de {}".format(its, ann, cap))
+
+nom_fichier = "calcul_interets_{}_{}%_sur_{}_ans.txt".format(cap, its, ann)
+mon_fichier = os.path.join(local_rep, nom_fichier)
+fin = input("imprimer le fichier dans {}/{} ? (y/n)".format(local_rep, nom_fichier)).lower()
+if fin == 'y':
+    imprimer(mon_fichier)
+    print("le fichier est enregistré dans {}/{}".format(local_rep, nom_fichier))
+else:
+    print("fin")

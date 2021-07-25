@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# on peut remplacer whiptail par dialog, l'effet est un peu different
+
+sudo echo "mode actuel :"
+#verifier le mode actuel
+current_mode=sudo cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "presse une touche"
+read var
+
+OPTION=$(whiptail --title 'Choisir un mode cpu' --backtitle "Choisir le mode d'utilisation du CPU" --menu "Choisissez une option :" 15 60 4 \
+"1" "Passer en mode performance" \
+"2" "Passer en mode powersave" \
+"3" "Annuler" 3>&1 1>&2 2>&3)
+
+# exitstatus est renvoyé par whiptail : 0 correspond au choix d'une option, 1 à l'annulation du choix
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+    if [ $OPTION = 1 ]; then
+        echo "====== performance ======"
+        echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+# code a executer
+
+    elif [ $OPTION = 2 ]; then
+        echo "====== powersave ======"
+        echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+# code a executer
+    else
+        echo "Action annulée"
+    fi
+fi
+
+
