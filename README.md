@@ -10,7 +10,6 @@ You will find here :
 - ecran_taille: compare the size of screen desplay (to know exactly the size of a screen before buying it)
 - html_launcher: let you choose some html file (in the folder called 'html') to be launched in your web browser. The interest is to use it for graphical application with vue.js, for now only one app:
     - DIY_eliquide : helps you to calculate your e-liquide dilution.
-- perf_cpu_mode: allows you to switch your laptop cpu from "powersave" (wich is default setting) to "performance", to get it... more performant.
 - redimentionner_jpeg: useful to resize numerous pictures in a directory, for exemple if you need to send it by email, or have a size restriction to respect.
 Use option -h to see the synopsis of this.
 
