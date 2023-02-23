@@ -1,9 +1,13 @@
-This are some convenient scripts I made and use through my ~/bin folder,
-to be used in the terminal.
+# My bin folder
+
+This are some convenient scripts I've made and use through my ~/bin folder,
+to be accessible in terminal.
+
 As this tools are for my personnal use, many of them are in French, but google could help you to easily translate them in the language you want.
 
-You will find here :
+## You will find here :
 
+- madoch: converts all the .md files in a folder into an .html, easier to read and print.
 - battery_check: displays some infos about your laptop battery
 - calc_interets: calculate the income gained from an investment over time
 - cbr2rar.sh: convert every archive of the directory to comic format (ex: zip to cbz), and reciprocally.
@@ -15,5 +19,4 @@ Use option -h to see the synopsis of this.
 
 - secret_key_generator: useful for creating quickly a key, for django or something else. You can use a number as option to set the length of the key.
 
-I encourage you to go inside the code and adapt it to your own needs. Feel free to do anything you want with this code, it is very rought, but can be useful.
-
+Go inside the code and adapt it to your own needs. Feel free to do anything you want with this code, it is very rought, but can be useful.

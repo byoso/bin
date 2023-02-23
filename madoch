@@ -1,0 +1,204 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
+import argparse
+import os
+import pkg_resources
+
+# colors
+class c:
+    """Colors for text in terminal."""
+    red = '\033[31m'
+    green = '\033[32m'
+    yellow = '\033[33m'
+    blue = '\033[34m'
+    magenta = '\033[35m'
+    cyan = '\033[36m'
+    white = '\033[37m'
+    reset = '\033[0m'
+
+
+# CLI
+program_name = f"{c.yellow}{__file__.split('/')[-1]}{c.reset}"
+parser = argparse.ArgumentParser(
+    prog=program_name,
+    description=f'{c.blue}Converts all the .md files in the current directory into html files{c.reset}',
+    )
+parser.add_argument('dirname', nargs="?", default=os.getcwd())
+parser.add_argument(
+    '-s', '--singles',
+    action='store_true',
+    help='Each .md file is converted into a .html file without merging them')
+
+dirname = parser.parse_args().dirname
+singles = parser.parse_args().singles
+
+
+# colors
+class c:
+    """Colors for text in terminal."""
+    red = '\033[31m'
+    green = '\033[32m'
+    yellow = '\033[33m'
+    blue = '\033[34m'
+    magenta = '\033[35m'
+    cyan = '\033[36m'
+    white = '\033[37m'
+    reset = '\033[0m'
+
+
+# Dependencies check
+dependencies = [
+    'markdown',
+]
+message = (
+    f"{c.red}"
+    "ERROR: Missing dependencies.\n"
+    "Please install the dependencies with the following command:\n"
+    "pip install -U markdown \n"
+    f"{c.reset}"
+)
+for dependencie in dependencies:
+    try:
+        pkg_resources.require(dependencie)
+    except pkg_resources.VersionConflict:  # python3.7/3.8
+        print(message)
+        exit()
+    except pkg_resources.DistributionNotFound:  # python3.6/3.9
+        print(message)
+        exit()
+# imports here
+import markdown
+
+# css
+
+CSS = """
+<script>
+
+var h1 = document.getElementsByTagName("h1");
+for (i = 0; i < h1.length; i++) {
+    h1[i].className += 'title is-size-1 has-text-weight-bold';
+}
+var h2 = document.getElementsByTagName("h2");
+for (i = 0; i < h2.length; i++) {
+    h2[i].className += 'subtitle is-size-2 has-text-weight-bold';
+}
+var h3 = document.getElementsByTagName("h3");
+for (i = 0; i < h3.length; i++) {
+    h3[i].className += 'subtitle is-size-3 has-text-weight-bold';
+}
+var h4 = document.getElementsByTagName("h4");
+for (i = 0; i < h4.length; i++) {
+    h4[i].className += 'subtitle is-size-4 has-text-weight-bold';
+}
+var h5 = document.getElementsByTagName("h5");
+for (i = 0; i < h5.length; i++) {
+    h5[i].className += 'subtitle is-size-5 has-text-weight-bold';
+}
+
+var body = document.getElementsByTagName("body");
+body.className += 'container is-fluid';
+</script>
+
+<style>
+
+body {
+    margin:auto;
+    font-family: Ubuntu, monospace;
+    font-size: 1rem;
+    margin: 20px;
+    color: #3c3c3c;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: normal;
+
+}
+
+h1 {
+    font-size: 2.5rem;
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding: 5px;
+}
+h2 {font-size: 2.5rem;}
+h3 {font-size: 2rem;}
+h4 {font-size: 1.5rem;}
+h5 {font-size: 1.25rem;}
+p, li {font-size: 1.1rem;}
+
+.code {
+  white-space: pre;
+  background-color: #f5f2f0;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+}
+
+</style>
+"""
+
+
+# Functions
+
+def get_files(dirname):
+    files = os.listdir(dirname)
+    md_files = []
+    for file in files:
+        if file.endswith('.md'):
+            md_files.append(os.path.join(dirname, file))
+    return md_files
+
+
+def get_text(file):
+    with open(file, 'r') as f:
+        lines = f.readlines()
+        text = ''
+        code = False
+        for line in lines:
+            if line.startswith('```'):
+                code_type = line.split('```')[1][:-1]
+                line = '```'
+                code = not code
+                if code:
+                    line = line.replace('```', f'<pre class="code"><code class="language-{code_type}">\n')
+                else:
+                    line = line.replace('```', '</code></pre>')
+            text += line
+    return text
+
+
+def convert_files_to_html(files):
+
+    if not singles:
+        files = sorted(files)
+        text = ''
+        for file in files:
+            text += get_text(file) + "\n"
+            # outpout_file = os.path.join(dirname, 'Book_version.html')
+        file_name = dirname.split('/')[-1] + ".html"
+
+        with open(file_name, 'w') as f:
+            text += CSS
+            html = markdown.markdown(text)
+            f.write(html)
+
+    else:
+        for file in files:
+            html = markdown.markdown(get_text(file))
+            outpout_file = file.replace('.md', '.html')
+            with open(outpout_file, 'w') as f:
+                html += CSS
+                f.write(html)
+
+
+def main():
+    files = get_files(dirname)
+    print(f"Convert {dirname} to html files...")
+    print("singles: ", singles)
+    convert_files_to_html(files)
+
+
+if __name__ == '__main__':
+    main()
