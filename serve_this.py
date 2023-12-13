@@ -1,5 +1,10 @@
 #! /usr/bin/env python3
 
+"""Serve the current directory.
+
+    Serve the current directory at to your local network to quickly share ressources.
+"""
+
 import os
 import socket
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -28,7 +33,8 @@ def get_ip():
 
 if __name__ == "__main__":
     IP = get_ip()
-    print(f"Serving at http://{IP}:{PORT}")
+    print(f"Serving '{DIR}' at http://{IP}:{PORT}")
+    print(f"Press Ctrl+C to stop.")
     try:
         HTTPServer((IP, PORT), SimpleHTTPRequestHandler).serve_forever()
     except KeyboardInterrupt:
