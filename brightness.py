@@ -19,7 +19,6 @@ class Application(tk.Frame):
 
 
     def select(self) -> None:
-        print(self.selected.get())
         value = self.screens[self.selected.get()].get("value", 1.0)
         self.slider.set(value*100)
 
@@ -54,6 +53,5 @@ class Application(tk.Frame):
 app = tk.Tk()
 app.title("Brightness Controller")
 app.geometry("600x400")
-print(app.size())
 main_frame = Application()
 app.mainloop()
