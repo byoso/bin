@@ -48,10 +48,10 @@ class Application(tk.Frame):
         name = self.screens[self.selected.get()]["name"]
         os.system(f"xrandr --output {name} --brightness {value}")
 
+if __name__ == "__main__":
+    app = tk.Tk()
+    app.title("Brightness Controller")
+    app.geometry("600x400")
+    main_frame = Application()
+    app.mainloop()
 
-
-app = tk.Tk()
-app.title("Brightness Controller")
-app.geometry("600x400")
-main_frame = Application()
-app.mainloop()
