@@ -15,8 +15,9 @@ As this tools are for my personnal use, many of them are in French, but google c
     - DIY_eliquide : helps you to calculate your e-liquide dilution.
 - redimentionner_jpeg: useful to resize numerous pictures in a directory, for exemple if you need to send it by email, or have a size restriction to respect.
 Use option -h to see the synopsis of this.
-
+- brightness.py : controle the brightness of multiple screens connected within a very simple UI tool.
 - secret_key_generator: useful for creating quickly a key, for django or something else. You can use a number as option to set the length of the key.
 - serve_this.py : quickly creates a server to share ressources on your local network.
+- animate_gif.py : create an animated gif from the images in the working directory (requires Pillow).
 
 Go inside the code and adapt it to your own needs. Feel free to do anything you want with this code, it is very rought, but can be useful.

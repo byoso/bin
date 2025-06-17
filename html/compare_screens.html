@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon example -->
+  <link rel="icon" href="https://i.goopics.net/lhw9s2.png">
+  <title>Vue.js3 app</title>
+  <!-- bulma -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- vue.js 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- markdown converter to html (cdn) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="container" id="app">
+  <h1 class="title">Screens comparator</h1>
+  <button class="button is-success" @click="addScreen">+ screen</button>
+  <div v-for="screen in this.screens">
+    <hr>
+    <div class="columns">
+      <div class="column">
+        <div class="screen-title-row">
+          <input type="text" class="title" v-model="screen.name">
+          <button class="button is-rounded is-danger is -small button-delete" @click="deleteScreen(screen.id)">X</button>
+        </div>
+        <div>
+          <p>Diagonal</p>
+          <input type="number" v-model="screen.diagonal">
+          <select v-model="screen.unit">
+            <option>
+              inches
+            </option>
+            <option>
+              cm
+            </option>
+          </select>
+          <p>Resolution</p>
+          <input type="number" v-model="screen.resX"> X <input type="number" v-model="screen.resY">
+
+          <p>Whidth: {{ getWidth(screen) }} cm</p>
+          <p>Height: {{ getHeight(screen) }} cm</p>
+          <p>Surface: {{ getSurface(screen) }} cm²</p>
+        </div>
+      </div>
+      <div class="column display-screen">
+      </div>
+      <img src="greyPixel.jpg" alt="image" :width="getPictureWidth(screen)"
+        :height="getPictureHeight(screen)"
+        :style="getPictureStyle(screen)"
+        >
+    </div>
+  </div>
+
+
+
+
+</div>
+
+</body>
+
+<script>
+  const { createApp } = Vue
+
+  createApp({
+    data() {
+      return {
+        currentId: -1,
+        screens: []
+      }
+    },
+    computed: {
+
+    },
+    methods: {
+      getId(){
+        this.currentId ++
+        return this.currentId
+      },
+      deleteScreen(id) {
+        this.screens = this.screens.filter(screen => screen.id !== id)
+      },
+      addScreen () {
+        let id = this.getId()
+        const screen = {id: id, name: `Screen ${id}`, unit: 'inches', diagonal: 27, resX: 1920, resY: 1080}
+        this.screens.push(screen)
+      },
+      getWidth(screen){
+        let diagonal = screen.diagonal
+        if (screen.unit === 'inches') {
+          diagonal = diagonal * 2.54
+        }
+        return Math.round(diagonal * screen.resX / Math.sqrt(screen.resX ** 2 + screen.resY ** 2))
+      },
+      getHeight(screen){
+        let diagonal = screen.diagonal
+        if (screen.unit === 'inches') {
+          diagonal = diagonal * 2.54
+        }
+        return Math.round(diagonal * screen.resY / Math.sqrt(screen.resX ** 2 + screen.resY ** 2))
+      },
+      getSurface(screen){
+        return this.getWidth(screen) * this.getHeight(screen)
+      },
+      getPictureWidth(screen){
+        return this.getWidth(screen)*10
+      },
+      getPictureHeight(screen){
+        return this.getHeight(screen)*10
+      },
+      getPictureStyle(screen){
+        return `aspect-ratio: ${this.getWidth(screen)}/${this.getHeight(screen)}`
+      }
+    }
+  }).mount('#app')
+</script>
+
+<style scoped>
+.screen-title-row {
+  display: flex;
+}
+.screen-title {
+  margin-right: 10px;
+}
+.picture {
+  background-color: lightgray;
+}
+.screen-title-row {
+  display: flex;
+}
+.button-delete {
+  margin-left: 10px;
+}
+</style>
+
+</html>

@@ -1,25 +1,30 @@
 #! /bin/bash
 
 
+
+
 OPTION=$(whiptail --title "Applications html" --backtitle "Lanceur d'appli html" --menu "Choisissez une option :" 15 60 4 \
 "1" "DIY e-liquide" \
-"2" "Option 2" \
+"2" "Screen comparator" \
 3>&1 1>&2 2>&3)
 
 # exitstatus et renvoyé par whiptail : 0 correspond au choix d'une option, 1 à l'annulation du choix
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
+    echo option $OPTION
     if [ $OPTION = 1 ]; then
-        echo "DIY e-liquide"
     # code a executer
-    xdg-open ~/bin/html/DIY_eliquide.html
+    xdg-open ~/bin/html/diy.html
 
     elif [ $OPTION = 2 ]; then
-        echo "====== Option 2 ======"
     # code a executer
+    xdg-open ~/bin/html/compare_screens.html
+
+    else
+        echo "Option inconnue"
     fi
 else
     echo "Action annulée"
 fi
-
-kill $$
+sleep 2
+kill -9 $PPID
